@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "Hello Extensions",
+    "description": "Base Level Extension",
+    "version": "1.0",
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": "test.png"
+    }, 
+    "content_scripts": [
+        {
+        "js": ["scripts/content.js"],
+        "matches": [
+          "https://www.imdb.com/title/*"
+        ]
+        }
+    ]
+    
+}
