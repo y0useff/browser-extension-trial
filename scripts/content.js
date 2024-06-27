@@ -14,11 +14,13 @@ function injectStreamNowButton(type, titleID, season, episode) {
     return streamingCorner.innerHTML =
     `
     <span>
-        <h1> Stream Now For Free!
+        <h1> <b> Stream Now For Free! <b>
         <br />
-        <button onClick="window.location.href='http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}'" id="streamNowFree">
-            STREAM NOW
-        </button>
+        <a href="http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}"> 
+            <img id="streamNowFree" height="200px" width="500px" src="https://static.vecteezy.com/system/resources/thumbnails/010/927/261/small/watch-now-button-on-white-background-play-video-icon-watch-now-video-play-button-sign-flat-style-vector.jpg" 
+            <img>
+        </a>
+       
     </span>
     `
 }
