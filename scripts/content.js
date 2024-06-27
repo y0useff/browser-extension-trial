@@ -5,21 +5,33 @@
 //!!HAVE BUTTON MAKE API CALL WITH URL ID
 
 
+
+
 function injectStreamNowButton(type) {
     const headerElement = document.querySelectorAll("section.ipc-page-section")[0] //main content, is at the top of the html
     const bottomHeaderElement = (headerElement.lastChild).lastChild //it is doubly nested, hence the .lastChild x2
     const streamingCorner = bottomHeaderElement.lastChild //naviagates to the bottom right
+    const titleID = getTitleID()
     return streamingCorner.innerHTML =
     `
     <span>
         <h1> Stream Now For Free!
         <br />
-        <button onClick="window.location.href='http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${getTitleID()}'" id="streamNowFree">
+        <button onClick="window.location.href='http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${titleID}'" id="streamNowFree">
             STREAM NOW
         </button>
     </span>
     `
+}
 
+function checkIfTitleExists(type, titleId) {
+    //`https://vidsrc.xyz/embed/${type}?imdb=${titleId}`
+    chrome.runtime.sendMessage({type, titleId, fetch: true})
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+            if (request.present) return injectStreamNowButton(type)
+        }
+    )
 }
 
 function getTitleID() {
@@ -34,10 +46,9 @@ function getTitleID() {
 
 function isTvOrMovie() {
     for (let node of document.querySelectorAll('li')) {
-        if (node.textContent == "TV Series") return injectStreamNowButton("tv") // true means show
+        if (node.textContent == "TV Series") checkIfTitleExists("TV Series", getTitleID())
     }
-    injectStreamNowButton("movie")
-
+    checkIfTitleExists("movie", getTitleID())
 }   
 
 function main(){
