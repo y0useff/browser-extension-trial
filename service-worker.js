@@ -3,9 +3,8 @@ console.log("service worker is servicing!")
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.fetch == true ) {
-            console.log(request)
-        
-            fetch(`https://vidsrc.xyz/embed/${request.type}?imdb=${request.titleId}`)
+            console.log('`https://vidsrc.xyz/embed/${request.type}?imdb=${request.titleId}&season=${request.season}&episode=${request.episode}`')
+            fetch(`https://vidsrc.xyz/embed/${request.type}?imdb=${request.titleId}&season=${request.season}&episode=${request.episode}`)
                 .then((res) => {
                     console.log(res.status)
                     if (res.status == 404) return false;
