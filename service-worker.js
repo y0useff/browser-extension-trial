@@ -3,10 +3,11 @@ console.log("service worker is servicing!")
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.fetch == true ) {
-            console.log("request is being sent")
+            console.log(request)
         
             fetch(`https://vidsrc.xyz/embed/${request.type}?imdb=${request.titleId}`)
                 .then((res) => {
+                    console.log(res.status)
                     if (res.status == 404) return false;
                         //call content script to inject
                     (async () => {

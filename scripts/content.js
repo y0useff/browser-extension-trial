@@ -26,7 +26,7 @@ function injectStreamNowButton(type) {
 
 function checkIfTitleExists(type, titleId) {
     //`https://vidsrc.xyz/embed/${type}?imdb=${titleId}`
-    chrome.runtime.sendMessage({type, titleId, fetch: true})
+    chrome.runtime.sendMessage({type: type, titleId: titleId, fetch: true})
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
             if (request.present) return injectStreamNowButton(type)
@@ -46,9 +46,9 @@ function getTitleID() {
 
 function isTvOrMovie() {
     for (let node of document.querySelectorAll('li')) {
-        if (node.textContent == "TV Series") checkIfTitleExists("TV Series", getTitleID())
+        if (node.textContent == "TV Series")return checkIfTitleExists("tv", getTitleID())
     }
-    checkIfTitleExists("movie", getTitleID())
+    return checkIfTitleExists("movie", getTitleID())
 }   
 
 function main(){
