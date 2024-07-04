@@ -11,17 +11,17 @@ function injectStreamNowButton(type, titleID, season, episode) {
     const headerElement = document.querySelectorAll("section.ipc-page-section")[0] //main content, is at the top of the html
     const bottomHeaderElement = (headerElement.lastChild).lastChild //it is doubly nested, hence the .lastChild x2
     const streamingCorner = bottomHeaderElement.lastChild //naviagates to the bottom right
+    const streamImageUrl = (chrome.runtime.getURL("../images/stream-button.png"))
+    const downloadImageUrl = (chrome.runtime.getURL("../images/download-button.png"))
+
     return streamingCorner.innerHTML =
     `
-    <span>
-        <h1> <b> Stream Now For Free! <b>
-        <br />
         <a href="http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}"> 
-            <img id="streamNowFree" height="200px" width="500px" src="https://static.vecteezy.com/system/resources/thumbnails/010/927/261/small/watch-now-button-on-white-background-play-video-icon-watch-now-video-play-button-sign-flat-style-vector.jpg" 
-            <img>
+            <img id="streamNowFree" height="100px" width="300px" src="${streamImageUrl}"> </img>
         </a>
-       
-    </span>
+        <a href="">
+            <img id="downloadNow" height="100px" width="300px" src="${downloadImageUrl}"> </img>
+        </a>
     `
 }
 

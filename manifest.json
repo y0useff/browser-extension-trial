@@ -5,7 +5,7 @@
     "version": "1.0",
     "action": {
       "default_popup": "index.html",
-      "default_icon": "pause.jpg"
+      "default_icon": "images/512x512.png"
     }, 
     "content_scripts": [
         {
@@ -20,6 +20,12 @@
     ],
     "background": {
       "service_worker": "service-worker.js"
-    }
+    },
+    "web_accessible_resources" : [
+      {
+        "resources": [ "images/*.png" ],
+        "matches": [ "https://www.imdb.com/*"]
+      }
+    ]
     
 }
