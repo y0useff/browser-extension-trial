@@ -7,22 +7,28 @@
 
 
 
-function injectStreamNowButton(type, titleID, season, episode) {
+function injectStreamNowButton(type, titleID, season=1, episode=1) {
     const headerElement = document.querySelectorAll("section.ipc-page-section")[0] //main content, is at the top of the html
     const bottomHeaderElement = (headerElement.lastChild).lastChild //it is doubly nested, hence the .lastChild x2
     const streamingCorner = bottomHeaderElement.lastChild //naviagates to the bottom right
     const streamImageUrl = (chrome.runtime.getURL("../images/stream-button.png"))
     const downloadImageUrl = (chrome.runtime.getURL("../images/download-button.png"))
+    // chrome.downloads.download( {url: `http://45.63.12.74:3000/download?url=vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}`})
 
-    return streamingCorner.innerHTML =
+        streamingCorner.innerHTML =
     `
         <a href="http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}"> 
             <img id="streamNowFree" height="100px" width="300px" src="${streamImageUrl}"> </img>
         </a>
-        <a href="">
+        <a id="download" href="" target="_blank">
             <img id="downloadNow" height="100px" width="300px" src="${downloadImageUrl}"> </img>
         </a>
     `
+
+    document.querySelector("#download").addEventListener('click', () => {
+        const url = `http://45.63.12.74:3000/download?url=vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}`
+        chrome.runtime.sendMessage({url: url})
+    })
 }
 
 function checkIfTitleExists(type, titleId, season, episode) {

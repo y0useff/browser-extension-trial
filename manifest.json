@@ -11,12 +11,25 @@
         {
         "js": ["scripts/content.js"],
         "matches": [
-          "https://www.imdb.com/title/*"
+          "https://www.imdb.com/title/*",
+          "http://45.63.12.74:3000/*",
+          "https://google.com/*"
         ]
         }
     ],
+    "permissions": [
+      "downloads",
+      "tabs",
+      "activeTab",
+      "webNavigation"
+    ],
     "host_permissions": [
-      "*://vidsrc.xyz/embed/*"
+      "http://*/*",
+      "https://*/*",
+      "*://vidsrc.xyz/embed/*",
+      "http://45.63.12.74:3000/*",
+      "https://google.com/*"
+
     ],
     "background": {
       "service_worker": "service-worker.js"
