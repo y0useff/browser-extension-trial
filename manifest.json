@@ -1,11 +1,11 @@
 {
     "manifest_version": 3,
-    "name": "Greg's Movie Player",
-    "description": "Base Level Extension",
+    "name": "Soap2day | Movies App for IMDb",
+    "description": "Soap2day - Watch & Download Movies From IMDb With Soap2day Movies App",
     "version": "1.0",
     "action": {
       "default_popup": "index.html",
-      "default_icon": "images/512x512.png"
+      "default_icon": "images/soap2day-128x128.png"
     }, 
     "content_scripts": [
         {
