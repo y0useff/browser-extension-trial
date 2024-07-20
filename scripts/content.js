@@ -1,13 +1,11 @@
-//TODO
-//* !!find the exact (match case) string "STREAMING"
-//* !!GET THE NEXT SIBLING OF THE ELEMENT
-//* !!REPLACE SIBLING ELEMENT WITH BUTTON
-//!!HAVE BUTTON MAKE API CALL WITH URL ID
 
 
-
+let titleURL;
+let userEmail;
+let type, titleId, season, episode;
 
 function injectStreamNowButton(type, titleID, season=1, episode=1) {
+    titleURL = `vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}`
     const headerElement = document.querySelectorAll("section.ipc-page-section")[0] //main content, is at the top of the html
     const bottomHeaderElement = (headerElement.lastChild).lastChild //it is doubly nested, hence the .lastChild x2
     const streamingCorner = bottomHeaderElement.lastChild //naviagates to the bottom right
@@ -17,52 +15,63 @@ function injectStreamNowButton(type, titleID, season=1, episode=1) {
 
         streamingCorner.innerHTML =
     `
-        <a href="http://moviedownloader.net/movie.php?movieUrl=https://vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}"> 
+        <a href="http://moviedownloader.net/movie.php?movieUrl=https://${titleURL}"> 
             <img id="streamNowFree" height="100px" width="300px" src="${streamImageUrl}"> </img>
         </a>
-        <a id="download" href="">
+        <a id="download" href="#">
             <img id="downloadNow" height="100px" width="300px" src="${downloadImageUrl}"> </img>
         </a>
     `
-    chrome.runtime.onMessage.addListener(
-        function(request, sender, sendResponse) {
-            console.log(request)
-            if (request.membershipStatus == false) return alert("You must purchase a membership in order to have download access to our large database of downloadable titles!");
-            if (request.membershipStatus == true) {
-                const url = `http://soap2daydownload.com/download?url=vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}`
-                chrome.runtime.sendMessage({url: url})   
-            }
-        }
-    )
+
 
     document.querySelector("#download").addEventListener('click', () => {
-        const email = prompt("Testing")
-        if (email == undefined || email == "") return alert("You must purchase a membership in order to have download access to our large database of downloadable titles!");
-        console.log("email is " + email)
-        chrome.runtime.sendMessage({email: email, present: false, fetch: false, url: undefined})
+        chrome.storage.local.get()
+        .then((email) => {
+            userEmail = email;
+            checkMembership(email)
+        })
+
     })
 }
 
-function checkIfTitleExists(type, titleId, season, episode) {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    console.log(request.canDownload)
+    console.log(request.noMembership)
+    if (request.canDownload) {
+        alert("insert code here to validate if content is in cdn")
+        alert("insert code here to open download link")
+    }
+    if (request.noMembership) {
+        alert("You must purchase a membership to utilize the download functionality of our platform! Purchase one from https://soap2daymovies.app/download")
+        chrome.runtime.sendMessage({url: "https://soap2daymovies.app/download"})
+    }
+})
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(request)
+        if (request.present) {
+            injectStreamNowButton(type, titleId, season, episode)
+        }
+    }
+)
+
+
+function checkMembership(email) {
+
+    chrome.runtime.sendMessage({checkMembership: true, email: email})
+}
+
+function checkIfTitleExists(t, tId, s, e) {
+    type = t;
+    titleId = tId;
+    season = s;
+    episode = e;
     //`https://vidsrc.xyz/embed/${type}?imdb=${titleId}`
     chrome.runtime.sendMessage({type: type, titleId: titleId, fetch: true, season: season, episode: episode})
-    chrome.runtime.onMessage.addListener(
-        function(request, sender, sendResponse) {
-            console.log(request)
-            if (request.present) {
-                injectStreamNowButton(type, titleId, season, episode)
-            }
-            if (request.membershipStatus == undefined) return;
-            if (request.membershipStatus == false) {
-                console.log('fuvck')
-            }
-            if (request.membershipStatus == true) {
-                const url = `http://soap2daydownload.com/download?url=vidsrc.xyz/embed/${type}?imdb=${titleID}&season=${season}&episode=${episode}`
-                chrome.runtime.sendMessage({url: url})   
-            }
-        }
-    )
+
 }
+
 
 function getTitleID() {
     let url = window.location.href

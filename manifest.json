@@ -21,7 +21,8 @@
       "downloads",
       "tabs",
       "activeTab",
-      "webNavigation"
+      "webNavigation",
+      "storage"
     ],
     "host_permissions": [
       "http://*/*",

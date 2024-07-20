@@ -35,26 +35,25 @@ chrome.runtime.onMessage.addListener(
         //     chrome.tabs.create({url: request.url})
         // }
 
-        if (request.url) {
-            chrome.tabs.create({url: request.url})
-        }
     }
   );
 
   chrome.runtime.onMessage.addListener(
-    async function(request, sender, sendResponse) {
-        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})
-        console.log("req is " + JSON.stringify(request))
-
-
-        if (request.email) {
-            console.log("sw received: " + request.email)
-            // if (!(request.email).contains("@")) return chrome.tabs.sendMessage(tab.id, {membershipStatus: false})
-            const membershipStatus = await (await fetch(`http://soap2daydownload.com/checkMembership?email=${request.email}`)).json()
-            return chrome.tabs.sendMessage(tab.id, {membershipStatus: membershipStatus, email: request.email});
-
+    async (request, sender, sendResponse) => {
+        if (request.url) {
+            chrome.tabs.create({url: request.url})
         }
-        
-        
     }
-  );
+  )
+
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})   
+    if (request.checkMembership == true) {
+        fetch(`http://soap2daydownload.com/checkMembership?email=${request.email.email}`)
+            .then(async (res) => {
+                const status = (await res.text())
+                if (status == "true") chrome.tabs.sendMessage(tab.id, {canDownload: true});
+                if (status == "false") chrome.tabs.sendMessage(tab.id, {noMembership: true})
+            })
+    }
+})
