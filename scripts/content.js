@@ -15,13 +15,17 @@ function injectStreamNowButton(type, titleID, season=1, episode=1) {
 
         streamingCorner.innerHTML =
     `
-        <a href="http://moviedownloader.net/movie.php?movieUrl=https://${titleURL}"> 
+        <a id="stream" href="http://moviedownloader.net/movie.php?movieUrl=https://${titleURL}"> 
             <img id="streamNowFree" height="100px" width="300px" src="${streamImageUrl}"> </img>
         </a>
         <a id="download" href="#">
             <img id="downloadNow" height="100px" width="300px" src="${downloadImageUrl}"> </img>
         </a>
     `
+
+    document.querySelector("#stream").addEventListener('click', () => {
+        chrome.runtime.sendMessage({validateTitle: true, titleUrl: titleURL})
+    })
 
 
     document.querySelector("#download").addEventListener('click', () => {
@@ -30,16 +34,13 @@ function injectStreamNowButton(type, titleID, season=1, episode=1) {
             userEmail = email;
             checkMembership(email)
         })
-
     })
 }
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    console.log(request.canDownload)
-    console.log(request.noMembership)
+
     if (request.canDownload) {
-        alert("insert code here to validate if content is in cdn")
-        alert("insert code here to open download link")
+        chrome.runtime.sendMessage({validateTitle: true, titleUrl: titleURL})
     }
     if (request.noMembership) {
         alert("You must purchase a membership to utilize the download functionality of our platform! Purchase one from https://soap2daymovies.app/download")
@@ -52,6 +53,14 @@ chrome.runtime.onMessage.addListener(
         console.log(request)
         if (request.present) {
             injectStreamNowButton(type, titleId, season, episode)
+        }
+    }
+)
+
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        if (request.notFound) {
+            alert("Title not found in CDN! Try again in 10-15 minutes")
         }
     }
 )

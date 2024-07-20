@@ -21,9 +21,25 @@
 
         <script defer src="options.js" type="module"></script>
         <form id="optionsForm">
+            <span>
+                <label id="t"><strong>Enter your membership email:</a></strong></label>
                 <input id="email" type="text" value=""> 
                 <input id="saveEmail" type="submit" value="Save Email"> 
-          </label>
+            </span>
+
+            <style> 
+            #t, #email {
+                min-width: 50%
+            }
+            #email {
+                margin-left: 15px
+            }
+            #saveEmail {
+                width:100%;
+                margin-top: 1%;
+            }
+
+            </style>
 
 </body>
 </html>
