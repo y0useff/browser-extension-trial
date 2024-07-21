@@ -46,24 +46,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         alert("You must purchase a membership to utilize the download functionality of our platform! Purchase one from https://soap2daymovies.app/download")
         chrome.runtime.sendMessage({url: "https://soap2daymovies.app/download"})
     }
+
+    if (request.present) {
+        injectStreamNowButton(type, titleId, season, episode)
+    }
+    if (request.notFound) {
+        alert("Title not found in CDN! Try again in 10-15 minutes")
+    }
+    if (request.found && request.download){
+        chrome.runtime.sendMessage({url: `http://soap2daydownload.com/download?url=${titleURL}`})
+    }
 })
 
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        console.log(request)
-        if (request.present) {
-            injectStreamNowButton(type, titleId, season, episode)
-        }
-    }
-)
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    console.log(request)
+    if (request.verified == "true") alert("Email Verified")
+    if (request.verified == "false") alert("Invalid Email! Purchase a membership at https://soap2daymovies.app/download")
+})
 
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        if (request.notFound) {
-            alert("Title not found in CDN! Try again in 10-15 minutes")
-        }
-    }
-)
 
 
 function checkMembership(email) {

@@ -54,6 +54,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         fetch(`http://soap2daydownload.com/checkMembership?email=${request.email.email}`)
             .then(async (res) => {
                 const status = (await res.text())
+                if (request.continue == false) {
+                    return chrome.tabs.sendMessage(tab.id, {verified: status});
+                }
                 if (status == "true") chrome.tabs.sendMessage(tab.id, {canDownload: true});
                 if (status == "false") chrome.tabs.sendMessage(tab.id, {noMembership: true})
             })
@@ -64,14 +67,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})   
     if (request.validateTitle) {
         console.log(request.titleUrl)
-        fetch(`http://soap2daydownload.com/validateTitle?url={${request.titleUrl}}`)
+        fetch(`http://soap2daydownload.com/validateTitle?url=${request.titleUrl}`)
             .then(async (res) => {
                 const status = (await res.text())
                 if (status == "Not Found") {
                     fetch(`http://soap2daydownload.com/stream?url=${request.titleUrl}`)
                     chrome.tabs.sendMessage(tab.id, {notFound: true}) 
                 }
-                if (status == "OK") chrome.tabs.sendMessage(tab.id, {found: true}) 
+                if (status == "OK") chrome.tabs.sendMessage(tab.id, {found: true, download:true}) 
             })
     }
         
