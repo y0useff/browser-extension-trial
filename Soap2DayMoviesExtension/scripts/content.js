@@ -24,7 +24,7 @@ function injectStreamNowButton(type, titleID, season=1, episode=1) {
     `
 
     document.querySelector("#stream").addEventListener('click', () => {
-        chrome.runtime.sendMessage({validateTitle: true, titleUrl: titleURL})
+        chrome.runtime.sendMessage({validateTitle: true, titleUrl: titleURL, download: false})
     })
 
 

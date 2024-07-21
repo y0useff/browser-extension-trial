@@ -74,7 +74,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                     fetch(`http://soap2daydownload.com/stream?url=${request.titleUrl}`)
                     chrome.tabs.sendMessage(tab.id, {notFound: true}) 
                 }
-                if (status == "OK") chrome.tabs.sendMessage(tab.id, {found: true, download:true}) 
+                if (status == "OK")  {
+                    if (request.download == false) {
+                        chrome.tabs.sendMessage(tab.id, {found: true, download:false}) 
+                    }
+                    else chrome.tabs.sendMessage(tab.id, {found: true, download:true}) 
+                }
             })
     }
         
